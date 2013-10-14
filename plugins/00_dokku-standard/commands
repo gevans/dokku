@@ -15,8 +15,13 @@ set -e; case "$1" in
         echo "App $APP does not exist"
         exit 1
     fi
+    if [[ -f "/home/git/$APP/VOLUME" ]]; then
+      VOLUME="$(cat "/home/git/$APP/VOLUME")/layer:/app"
+    else
+      VOLUME="/app"
+    fi
     shift 2
-    docker run -i -t $IMAGE /exec "$@"
+    docker run -v $VOLUME -i -t $IMAGE /exec "$@"
     ;;
 
   help)
